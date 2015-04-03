@@ -20,9 +20,10 @@ import java.sql.Statement;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.TreeMap;
 
-public class third_MC{
+public class sample{
 	private final static int SIZE = 1300000;
 	//用来存放属性值与属性值序号的对应关系的hash表，还缺少一个反过来对应的
 	private static Hashtable<String,Integer> hash1 = new Hashtable<String,Integer>();
@@ -66,7 +67,8 @@ public class third_MC{
 		stmt.close();
 		conn.close();
 		System.out.println("开始读数据文件");
-		FileReader file = new FileReader("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件\\MC_out_preprocess.txt");
+		System.out.println(System.currentTimeMillis());
+		FileReader file = new FileReader("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件0\\MC_out_preprocess.txt");
 		BufferedReader br = new BufferedReader(file);
 		String str = br.readLine();
 		str = br.readLine();
@@ -97,16 +99,17 @@ public class third_MC{
 			byte_index+=2;
 			str = br.readLine();
 		}
+		System.out.println(System.currentTimeMillis());
 		System.out.println("开始写二进制文件");
-		FileOutputStream f1 = new FileOutputStream("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件\\atr1.bin");
+		FileOutputStream f1 = new FileOutputStream("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件0\\atr1.bin");
 		f1.write(by1, 0, byte_index/2);
 		f1.flush();
 		f1.close();
-		FileOutputStream f2 = new FileOutputStream("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件\\atr2.bin");
+		FileOutputStream f2 = new FileOutputStream("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件0\\atr2.bin");
 		f2.write(by2, 0, byte_index);
 		f2.flush();
 		f2.close();
-		FileOutputStream f3 = new FileOutputStream("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件\\atr3.bin");
+		FileOutputStream f3 = new FileOutputStream("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件0\\atr3.bin");
 		f3.write(by3, 0, byte_index/2);
 		f3.flush();
 		f3.close();
@@ -114,7 +117,7 @@ public class third_MC{
 		System.out.println("索引建立成功");
 		System.out.println("索引使用开始");
 		System.out.println(System.currentTimeMillis());
-		File file1 = new File("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件\\atr1.bin");
+		File file1 = new File("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件0\\atr1.bin");
 		FileInputStream fis = new FileInputStream(file1);
 		FileChannel fc = fis.getChannel();
 		//DataInputStream dis = new DataInputStream(fis);
@@ -124,7 +127,7 @@ public class third_MC{
 		}
 		byte[] b = byteBuffer.array();
 		int[] int1 = byte_to_int1(by1);
-		File file2 = new File("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件\\atr2.bin");
+		File file2 = new File("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件0\\atr2.bin");
 		fis = new FileInputStream(file2);
 		fc = fis.getChannel();
 		byteBuffer = ByteBuffer.allocate((int)fc.size());
@@ -133,7 +136,7 @@ public class third_MC{
 		}
 		b = byteBuffer.array();
 		int[] int2 = byte_to_int2(by2);
-		File file3 = new File("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件\\atr3.bin");
+		File file3 = new File("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件0\\atr3.bin");
 		fis = new FileInputStream(file3);
 		fc = fis.getChannel();
 		byteBuffer = ByteBuffer.allocate((int)fc.size());
@@ -149,18 +152,46 @@ public class third_MC{
 		TreeMap<Integer, Integer> tm = new TreeMap<Integer, Integer>();
 		//通过一个属性值与属性值序号对应的hashtable就可以通过属性的序号得到属性的值
 		for(int i = 0;i<int3.length;i++){
-			tm.put(int1[i]*amountOfatr2*amountOfatr3+int2[i]*amountOfatr3+int3[i],i);
-		}File f = new File("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件\\result_index.txt");
+			tm.put(int1[i]*amountOfatr2*amountOfatr3+int2[i]*amountOfatr3+int3[i],i+1);
+		}
+		System.out.println(System.currentTimeMillis());
+		File f = new File("D:\\学校\\学习\\JAVA实验室相关东西\\法国报刊任务\\CUFE\\new data\\位图读取文件0\\result_index.txt");
 		//用遍历的方式把TreeMap的元组输出到result_index。txt中
 		BufferedWriter output = new BufferedWriter(new FileWriter(f));
 		
 		Iterator it = tm.keySet().iterator();  
+		System.out.println("the first is :" + tm.firstEntry());
         while (it.hasNext()) {  
             //it.next()得到的是key，tm.get(key)得到obj  
         	output.write(tm.get(it.next())+"\n");  
-        } 
+        }
 		output.close();
 		System.out.println(System.currentTimeMillis());
+		System.out.println("Deal with position:");
+		System.out.print("Please input the value of journal_id:");
+		Scanner in = new Scanner(System.in);
+		String journal_id = in.nextLine();
+		System.out.println(System.currentTimeMillis());
+		int value = hash1.get(journal_id);
+		int count=0;
+		for(int i=0;i<int3.length;i++){
+			if(int3[i]==value){
+				count++;
+			}
+		}
+		for(int i=0;i<int3.length;i++){
+			if(int3[i]==15){
+				count++;
+			}
+		}
+		for(int i=0;i<int3.length;i++){
+			if(int3[i]==15){
+				count++;
+			}
+		}
+		System.out.println(System.currentTimeMillis());
+		System.out.println("hits "+count+ " cords");
+		
 	}
 	public static int[] byte_to_int1(byte[] by){
 		int[] re = new int[by.length];
